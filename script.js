@@ -53,10 +53,14 @@ const fetchRelatedMovies = async (movie_id) => {
 };
 // render related movies
 const renderRelatedMovies = async (RelatedMovies) => {
+	const relatedMoviesDiv = document.createElement('div');
+	relatedMoviesDiv.setAttribute('id', 'related-movies-div');
+	CONTAINER.appendChild(relatedMoviesDiv);
 	RelatedMovies.results.map((movie, index) => {
 		if (index < 5) {
 			const relatedMoviesDivtag = document.createElement('div');
-			relatedMoviesDivtag.innerHTML = `<h3>${movie.title}</h3>
+			relatedMoviesDivtag.setAttribute('id', 'related-movie-div');
+			relatedMoviesDivtag.innerHTML = `<p>${movie.title}</p>
 			<a href="${movie.title}">
 			<img border="0" alt="${movie.title}" src="${BACKDROP_BASE_URL}${movie.poster_path}" width="100" height="200"/>
 			</a>`;
@@ -64,7 +68,7 @@ const renderRelatedMovies = async (RelatedMovies) => {
 			// 	fetchMovie(movie.id);
 			// });
 
-			CONTAINER.appendChild(relatedMoviesDivtag);
+			relatedMoviesDiv.appendChild(relatedMoviesDivtag);
 		}
 	});
 };
@@ -120,8 +124,12 @@ const fetchMovie = async (movieId) => {
 
 // You'll need to play with this function in order to add features and enhance the style.
 const renderMovies = (movies) => {
+	const homepageDiv = document.createElement('div');
+	homepageDiv.setAttribute('class', 'row');
+	CONTAINER.appendChild(homepageDiv);
 	movies.map((movie) => {
 		const movieDiv = document.createElement('div');
+		movieDiv.setAttribute('class', 'col-md-4');
 		movieDiv.innerHTML = `
         <img src="${BACKDROP_BASE_URL + movie.backdrop_path}" alt="${
 			movie.title
@@ -131,7 +139,7 @@ const renderMovies = (movies) => {
 			movieDetails(movie);
 		});
 
-		CONTAINER.appendChild(movieDiv);
+		homepageDiv.appendChild(movieDiv);
 	});
 };
 

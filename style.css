@@ -1,11 +1,56 @@
 #movie-backdrop {
-    width: 100%;
+	width: 100%;
 }
 
 .container {
-    padding-top: 32px;
+	padding-top: 32px;
 }
 
 #actors {
-    margin: 24px 16px 0 0;
+	margin: 24px 16px 0 0;
+}
+/********** footer ************/
+footer {
+	padding: 10px 20px;
+	background: #e0dddd;
+	color: #666;
+}
+
+/********** social media icons ************/
+
+body {
+	padding: 0;
+	color: #fff;
+	line-height: 24px;
+	background: #262730
+		url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/93/noise-bg.png) repeat 0 0;
+}
+
+h1 {
+	margin-bottom: 0px;
+	font-size: 55px;
+	line-height: 1;
+}
+
+h2 {
+	font-family: 'Montserrat', sans-serif;
+	margin-bottom: 45px;
+	font-size: 12px;
+	text-transform: uppercase;
+}
+
+a {
+	color: #4183c4;
+	text-decoration: none;
+}
+.col-md-4 img {
+	width: 90%;
+}
+/***************related-movies-div****************/
+#related-movies-div {
+	display: flex;
+}
+#related-movie-div {
+	width: 20%;
+	justify-content: space-evenly;
 }
