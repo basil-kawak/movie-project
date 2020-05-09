@@ -11,6 +11,7 @@ const dropDownMenu = document.getElementsByClassName('dropdown-menu')[0];
 const autorun = async () => {
 	const movies = await fetchMovies();
 	renderMovies(movies.results);
+	console.log(movies.results);
 };
 // homeBtn.addEventListener('click', reset());
 // Don't touch this function please
@@ -108,8 +109,11 @@ const renderGeners = async () => {
 		const generAtag = document.createElement('a');
 		generAtag.setAttribute('class', 'dropdown-item');
 		generAtag.innerText = `${gener.name}`;
-		generAtag.addEventListener('click', () => {
-			fetchMovie(movie.id);
+		generAtag.addEventListener('click', (movies) => {
+			const generMovie = movies.results.filter(
+				(movie) => movie.genre_ids === gener.id
+			);
+			fetchMovies(generMovie);
 		});
 
 		dropDownMenu.appendChild(generAtag);
@@ -124,9 +128,11 @@ const fetchMovie = async (movieId) => {
 
 // You'll need to play with this function in order to add features and enhance the style.
 const renderMovies = (movies) => {
+	CONTAINER.innerHTML = '';
 	const homepageDiv = document.createElement('div');
 	homepageDiv.setAttribute('class', 'row');
 	CONTAINER.appendChild(homepageDiv);
+	console.log(homepageDiv.innerHTML);
 	movies.map((movie) => {
 		const movieDiv = document.createElement('div');
 		movieDiv.setAttribute('class', 'col-md-4');
@@ -145,17 +151,8 @@ const renderMovies = (movies) => {
 
 // You'll need to play with this function in order to add features and enhance the style.
 const renderMovie = (movie, trailer, credits) => {
-	// let director = credits.crew.find((directorName) => {
-	// 	if (directorName.job === 'Director') {
-	// 		console.log(directorName.name);
-	// 		return directorName.name;
-	// 	}
-	// });
-	let director = [];
-	credits.crew.forEach((element) => {
-		if (element.job === 'Director') {
-			director.push(element.name);
-		}
+	let director = credits.crew.find((directorName) => {
+		return directorName.job === 'Director';
 	});
 	CONTAINER.innerHTML = `
     <div class="row">
@@ -178,7 +175,7 @@ const renderMovie = (movie, trailer, credits) => {
 				movie.production_companies[0].name
 			} Minutes</p>
 			<p id="movie-language"><b>Movie Language:</b> ${movie.original_language}</p>
-			<p id="movie-director "><b>Movie Director:</b> ${director[0]}</p>
+			<p id="movie-director "><b>Movie Director:</b> ${director.name}</p>
 			<p id="movie-vote-average "><b>vote average:</b> ${movie.vote_average}</p>
 			<p id="movie-vote-count "><b>vote count:</b> ${movie.vote_count}</p>
             <h3>Overview:</h3>
