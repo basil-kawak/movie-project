@@ -1,5 +1,7 @@
 'use strict';
 
+
+
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 const PROFILE_BASE_URL = 'http://image.tmdb.org/t/p/w185';
 const BACKDROP_BASE_URL = 'http://image.tmdb.org/t/p/w780';
@@ -7,6 +9,8 @@ const CONTAINER = document.querySelector('.container');
 const homeBtn = document.getElementById('homeBtn');
 const dropDownMenu = document.getElementsByClassName('dropdown-menu')[0];
 const searchBox = document.getElementById('search-box');
+const actorsListBtn = document.getElementById('actors-list');
+
 
 // Don't touch this function please
 const autorun = async () => {
@@ -15,19 +19,25 @@ const autorun = async () => {
 };
 // Don't touch this function please
 const constructUrl = (path) => {
+	// console.log(atob('NTQyMDAzOTE4NzY5ZGY1MDA4M2ExM2M0MTViYmM2MDI='))
 	return `${TMDB_BASE_URL}/${path}?api_key=${atob(
 		'NTQyMDAzOTE4NzY5ZGY1MDA4M2ExM2M0MTViYmM2MDI='
 	)}`;
 };
 
+
+
 // You may need to add to this function, definitely don't delete it.
 const movieDetails = async (movie) => {
 	const movieRes = await fetchMovie(movie.id);
+	const relatedMoveiCredits = await fetchCredits(movie.id);//.slice(0, 5);
+	const relatedMoveiCredits5 = relatedMoveiCredits.cast.slice(0, 5)
+	console.log(relatedMoveiCredits5)
 	const credits = await fetchCredits(movie.id);
 	const RelatedMovies = await fetchRelatedMovies(movie.id);
 	const trailer = await fetchTrailer(movie.id);
 	renderMovie(movieRes, trailer, credits);
-	renderCredits(credits.cast);
+	renderCredits(relatedMoveiCredits5);
 	renderRelatedMovies(RelatedMovies);
 };
 
@@ -37,6 +47,45 @@ const fetchMovies = async () => {
 	const res = await fetch(url);
 	return res.json();
 };
+
+/**************** ACTOR LIST PAGE ************** */
+//1- fetch moveis
+//2- map in movies array
+//3- push all movies credits to an actor list array...
+const fetchPopularActors = async () => {
+	const url = constructUrl(`person/popular`);
+	const res = await fetch(url);
+	return res.json();
+};
+
+const renderPopularActors = async () => {
+	let actorsList = await fetchPopularActors();
+	actorsList = actorsList.results;
+	console.log('fofo')
+	CONTAINER.innerHTML = '';
+	const homepageDiv = document.createElement('div');
+	homepageDiv.setAttribute('class', 'row');
+	CONTAINER.appendChild(homepageDiv);
+	// console.log(homepageDiv.innerHTML);
+	actorsList.map((actor) => {
+		const movieDiv = document.createElement('div');
+		movieDiv.setAttribute('class', 'col-md-4');
+		movieDiv.innerHTML = `
+        <img src="${BACKDROP_BASE_URL + actor.profile_path}" alt="${
+			actor.name
+		} poster">
+		<h3>${actor.name}</h3>`;
+		movieDiv.addEventListener('click', () => {
+			// Here majd's note (goes single actor render)):
+			movieDetails(movie);
+		});
+
+		homepageDiv.appendChild(movieDiv);
+	});
+};
+// actorsListBtn.addEventListener('click', renderPopularActors());
+
+
 /****************  Trailer ************** */
 const fetchTrailer = async (movie_id) => {
 	const url = constructUrl(`movie/${movie_id}/videos`);
@@ -113,7 +162,7 @@ const renderCredits = async (credits) => {
 	console.log(credits);
 	const actorsList = document.getElementById('actors');
 	credits.map((actor, index) => {
-		if (index < 5) {
+		
 			const actorAtag = document.createElement('li');
 			actorAtag.innerHTML = `<p>${actor.name}</p>
       <img src="${BACKDROP_BASE_URL + actor.profile_path}" alt = "${
@@ -124,9 +173,9 @@ const renderCredits = async (credits) => {
 			// });
 
 			actorsList.appendChild(actorAtag);
-		}
 	});
 };
+
 /**************** Movie LIst sorted by Genres ***************/
 // Movie Fetcher
 
