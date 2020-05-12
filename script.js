@@ -1,7 +1,5 @@
 'use strict';
 
-
-
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 const PROFILE_BASE_URL = 'http://image.tmdb.org/t/p/w185';
 const BACKDROP_BASE_URL = 'http://image.tmdb.org/t/p/w780';
@@ -10,7 +8,6 @@ const homeBtn = document.getElementById('homeBtn');
 const dropDownMenu = document.getElementsByClassName('dropdown-menu')[0];
 const searchBox = document.getElementById('search-box');
 const actorsListBtn = document.getElementById('actors-list');
-
 
 // Don't touch this function please
 const autorun = async () => {
@@ -25,15 +22,14 @@ const constructUrl = (path) => {
 	)}`;
 };
 
-
-
 // You may need to add to this function, definitely don't delete it.
 const movieDetails = async (movie) => {
 	const movieRes = await fetchMovie(movie.id);
-	const relatedMoveiCredits = await fetchCredits(movie.id);//.slice(0, 5);
-	const relatedMoveiCredits5 = relatedMoveiCredits.cast.slice(0, 5)
-	console.log(relatedMoveiCredits5)
+	const relatedMoveiCredits = await fetchCredits(movie.id); //.slice(0, 5);
+	const relatedMoveiCredits5 = relatedMoveiCredits.cast.slice(0, 5);
 	const credits = await fetchCredits(movie.id);
+	const actor = await fetchActor(12835);
+	console.log(actor);
 	const RelatedMovies = await fetchRelatedMovies(movie.id);
 	const trailer = await fetchTrailer(movie.id);
 	renderMovie(movieRes, trailer, credits);
@@ -61,7 +57,6 @@ const fetchPopularActors = async () => {
 const renderPopularActors = async () => {
 	let actorsList = await fetchPopularActors();
 	actorsList = actorsList.results;
-	console.log('fofo')
 	CONTAINER.innerHTML = '';
 	const homepageDiv = document.createElement('div');
 	homepageDiv.setAttribute('class', 'row');
@@ -71,21 +66,123 @@ const renderPopularActors = async () => {
 		const movieDiv = document.createElement('div');
 		movieDiv.setAttribute('class', 'col-md-4');
 		movieDiv.innerHTML = `
-        <img src="${BACKDROP_BASE_URL + actor.profile_path}" alt="${
-			actor.name
-		} poster">
+        <img onclick = "renderActorDetails(${actor.id})"src="${
+			BACKDROP_BASE_URL + actor.profile_path
+		}" alt="${actor.name} poster">
 		<h3>${actor.name}</h3>`;
-		movieDiv.addEventListener('click', () => {
-			// Here majd's note (goes single actor render)):
-			movieDetails(movie);
-		});
-
 		homepageDiv.appendChild(movieDiv);
 	});
 };
 // actorsListBtn.addEventListener('click', renderPopularActors());
 
+/****************  Singl Actor Page ************** */
 
+const fetchActor = async (person_id) => {
+	const url = constructUrl(`person/${person_id}`);
+	const res = await fetch(url);
+	return res.json();
+};
+
+const FetchActorMovies = async (actorId) => {
+	const url = constructUrl(`person/${actorId}/movie_credits`);
+	const res = await fetch(url);
+	return res.json();
+};
+const renderActorDetails = async (actorId) => {
+	console.log(actorId);
+	CONTAINER.innerHTML = '';
+	let actorInfo = await fetchActor(actorId);
+	let actorMoviesInfo = await FetchActorMovies(actorId);
+	console.log(actorInfo);
+	console.log(actorMoviesInfo);
+	let actorInfoArr = [];
+	actorMoviesInfo.cast.forEach((info) => {
+		actorInfoArr.push({
+			movieTitle: info.title,
+			moviePoster: info.poster_path || '/1fmjgN8EvDj1TiEJk2Zs4y0T40O.jpg',
+		});
+	});
+	console.log(actorInfoArr);
+	const actorsInfosObj = {
+		Name: actorInfo.name,
+		Birthday: actorInfo.birthday || 'unknown!',
+		Deathday: actorInfo.deathday || 'alive',
+		Popularity: actorInfo.popularity,
+		Picture: actorInfo.profile_path,
+		Biography: actorInfo.Biography || 'No Biography',
+		Movies: actorInfoArr.length > 0 ? actorInfoArr : 'No Available Movies',
+		Gender: actorInfo.gender === 2 ? 'Male' : 'Female',
+	};
+
+	console.log(actorsInfosObj);
+	CONTAINER.innerHTML = `
+    <div class="row">
+        <div class="col-md-4">
+             <img id="actor-img" src=${
+								BACKDROP_BASE_URL + actorsInfosObj.Picture
+							}>
+        </div>
+		<div class="col-md-8">
+			<h2 id="actor-name">${actorsInfosObj.Name}</h2>
+			<p id="actor-birthday"><b>Birthday:</b> ${actorsInfosObj.Birthday}</p>
+			<p id="actor-deathday"><b>Deathday:</b> ${actorsInfosObj.Deathday}</p>
+			<p id="actor-gender"><b>Gender:</b> ${actorsInfosObj.Gender}</p>
+			<p id="actor-popularity"><b>Popularity:</b> ${actorsInfosObj.Popularity}</p>
+			<p id="actor-biography "><b>Biography:</b> ${actorsInfosObj.Biography}</p>
+		</div>
+        <div>
+		<h3>A list of movies the actor participated in:</h3>
+			<ul id="actorParticipatedMovies" class="list-unstyled">
+			<li>${actorsInfosObj.Movies}</li>
+			</ul>
+		</div>
+	</div>`;
+	const partivioatedMoviesList = document.getElementById(
+		'actorParticipatedMovies'
+	);
+
+	/*********to chick if the actor has a movies or not (print No Available Movies )******* */
+
+	if (typeof actorsInfosObj.Movies === 'string') {
+		let movieLi = document.createElement('li');
+		// movieLi.innerHTML = `<p id="no-movie-found">${actorsInfosObj.Movies}</p>`;
+		partivioatedMoviesList.appendChild(movieLi);
+	} else if (typeof actorsInfosObj.Movies === 'object') {
+		actorsInfosObj.Movies.map((movie, index) => {
+			if (index < 5) {
+				let movieLi = document.createElement('li');
+				movieLi.innerHTML = `<p id="movie-title">${movie.movieTitle}</p>
+				<img id="movie-img" src='${BACKDROP_BASE_URL + movie.moviePoster}' alt = '${
+					movie.movieTitle
+				}' width = '100'>`;
+				partivioatedMoviesList.appendChild(movieLi);
+			}
+		});
+	}
+
+	// actorInfo.map((element) => {
+
+	// 	const actorInfoDiv = document.createElement('div');
+	// 	actorInfoDiv.innerHTML = `<img src="${
+	// 		BACKDROP_BASE_URL + actor.profile_path
+	// 	}" alt="${actor.name}" class="w-100">
+	//    <h3>${actor.name}</h3>`;
+	// 	actorInfoDiv.addEventListener('click', () => {
+	// 		const actorsInfosObj = {
+	// 			Name: actorInfo.name,
+	// 			Birthday: actorInfo.birthday,
+	// 			Deathday: actorInfo.deathday || 'alive',
+	// 			Popularity: actorInfo.popularity,
+	// 			Picture: actorInfo.profile_path,
+	// 			Biography: actorInfo.Biography,
+	// 			Movies: actorInfoArr,
+	// 			Gender: actorInfo.gender === 2 ? 'Female' : 'Male',
+	// 		};
+	// 		renderActorDetails(actorsInfosObj);
+	// 	});
+	// 	CONTAINER.appendChild(actorInfoDiv);
+	// });
+};
 /****************  Trailer ************** */
 const fetchTrailer = async (movie_id) => {
 	const url = constructUrl(`movie/${movie_id}/videos`);
@@ -162,17 +259,16 @@ const renderCredits = async (credits) => {
 	console.log(credits);
 	const actorsList = document.getElementById('actors');
 	credits.map((actor, index) => {
-		
-			const actorAtag = document.createElement('li');
-			actorAtag.innerHTML = `<p>${actor.name}</p>
+		const actorAtag = document.createElement('li');
+		actorAtag.innerHTML = `<p>${actor.name}</p>
       <img src="${BACKDROP_BASE_URL + actor.profile_path}" alt = "${
-				actor.name
-			}" width = "100px"/>`;
-			// generAtag.addEventListener('click', () => {
-			// 	fetchMovie(movie.id);
-			// });
+			actor.name
+		}" width = "100px"/>`;
+		// generAtag.addEventListener('click', () => {
+		// 	fetchMovie(movie.id);
+		// });
 
-			actorsList.appendChild(actorAtag);
+		actorsList.appendChild(actorAtag);
 	});
 };
 
@@ -195,7 +291,7 @@ const fetchGeners = async () => {
 };
 // Gener DropDown Menu Render
 const renderGeners = async () => {
-	const movies = await fetchMovies();
+	// const movies = await fetchMovies();
 	//   console.log(movies.results);
 
 	let geners = await fetchGeners();
