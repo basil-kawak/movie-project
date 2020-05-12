@@ -8,6 +8,7 @@ const homeBtn = document.getElementById('homeBtn');
 const dropDownMenu = document.getElementsByClassName('dropdown-menu')[0];
 const searchBox = document.getElementById('search-box');
 const actorsListBtn = document.getElementById('actors-list');
+const actorsList = document.createElement('ul').setAttribute('id', 'actors');
 
 // Don't touch this function please
 const autorun = async () => {
@@ -89,26 +90,27 @@ const FetchActorMovies = async (actorId) => {
 	return res.json();
 };
 const renderActorDetails = async (actorId) => {
-	console.log(actorId);
 	CONTAINER.innerHTML = '';
 	let actorInfo = await fetchActor(actorId);
 	let actorMoviesInfo = await FetchActorMovies(actorId);
-	console.log(actorInfo);
-	console.log(actorMoviesInfo);
 	let actorInfoArr = [];
 	actorMoviesInfo.cast.forEach((info) => {
 		actorInfoArr.push({
 			movieTitle: info.title,
-			moviePoster: info.poster_path || '/1fmjgN8EvDj1TiEJk2Zs4y0T40O.jpg',
+			moviePoster:
+				info.poster_path !== null
+					? info.poster_path
+					: '/1fmjgN8EvDj1TiEJk2Zs4y0T40O.jpg',
 		});
 	});
-	console.log(actorInfoArr);
 	const actorsInfosObj = {
 		Name: actorInfo.name,
 		Birthday: actorInfo.birthday || 'unknown!',
 		Deathday: actorInfo.deathday || 'alive',
 		Popularity: actorInfo.popularity,
-		Picture: actorInfo.profile_path,
+		Picture: actorInfo.profile_path
+			? BACKDROP_BASE_URL + actorInfo.profile_path
+			: './img/noImage.svg',
 		Biography: actorInfo.Biography || 'No Biography',
 		Movies: actorInfoArr.length > 0 ? actorInfoArr : 'No Available Movies',
 		Gender: actorInfo.gender === 2 ? 'Male' : 'Female',
@@ -118,9 +120,7 @@ const renderActorDetails = async (actorId) => {
 	CONTAINER.innerHTML = `
     <div class="row">
         <div class="col-md-4">
-             <img id="actor-img" src=${
-								BACKDROP_BASE_URL + actorsInfosObj.Picture
-							}>
+             <img id="actor-img" src=${actorsInfosObj.Picture}>
         </div>
 		<div class="col-md-8">
 			<h2 id="actor-name">${actorsInfosObj.Name}</h2>
@@ -133,7 +133,6 @@ const renderActorDetails = async (actorId) => {
         <div>
 		<h3>A list of movies the actor participated in:</h3>
 			<ul id="actorParticipatedMovies" class="list-unstyled">
-			<li>${actorsInfosObj.Movies}</li>
 			</ul>
 		</div>
 	</div>`;
@@ -145,7 +144,7 @@ const renderActorDetails = async (actorId) => {
 
 	if (typeof actorsInfosObj.Movies === 'string') {
 		let movieLi = document.createElement('li');
-		// movieLi.innerHTML = `<p id="no-movie-found">${actorsInfosObj.Movies}</p>`;
+		movieLi.innerHTML = `<p id="no-movie-found">${actorsInfosObj.Movies}</p>`;
 		partivioatedMoviesList.appendChild(movieLi);
 	} else if (typeof actorsInfosObj.Movies === 'object') {
 		actorsInfosObj.Movies.map((movie, index) => {
@@ -159,37 +158,18 @@ const renderActorDetails = async (actorId) => {
 			}
 		});
 	}
-
-	// actorInfo.map((element) => {
-
-	// 	const actorInfoDiv = document.createElement('div');
-	// 	actorInfoDiv.innerHTML = `<img src="${
-	// 		BACKDROP_BASE_URL + actor.profile_path
-	// 	}" alt="${actor.name}" class="w-100">
-	//    <h3>${actor.name}</h3>`;
-	// 	actorInfoDiv.addEventListener('click', () => {
-	// 		const actorsInfosObj = {
-	// 			Name: actorInfo.name,
-	// 			Birthday: actorInfo.birthday,
-	// 			Deathday: actorInfo.deathday || 'alive',
-	// 			Popularity: actorInfo.popularity,
-	// 			Picture: actorInfo.profile_path,
-	// 			Biography: actorInfo.Biography,
-	// 			Movies: actorInfoArr,
-	// 			Gender: actorInfo.gender === 2 ? 'Female' : 'Male',
-	// 		};
-	// 		renderActorDetails(actorsInfosObj);
-	// 	});
-	// 	CONTAINER.appendChild(actorInfoDiv);
-	// });
 };
+
 /****************  Trailer ************** */
+
 const fetchTrailer = async (movie_id) => {
 	const url = constructUrl(`movie/${movie_id}/videos`);
 	const res = await fetch(url);
 	return res.json();
 };
+
 /****************  serach box ************** */
+
 // Fetch search result
 const fetchSearchResult = async (keyWord) => {
 	const res = await fetch(
@@ -212,13 +192,14 @@ searchBox.addEventListener('input', async () => {
 	});
 	renderMovies(moviesArray);
 	console.log(actorsArray);
-	// actorsArray.forEach((element, index) => {
-	// 	console.log(element);
-	// 	renderCredits(element, index);
-	// });
-	//renderCredits(actorsArray); // renderActors function goes here
+	actorsArray.map((element) => console.log(element.id));
+
+	renderCredits(actorsArray);
+	//renderActorDetails(actorsArray[0].id); // renderActors function goes here
 });
+
 /****************  related movies ************** */
+
 // Fetch related movies
 const fetchRelatedMovies = async (movie_id) => {
 	const url = constructUrl(`movie/${movie_id}/similar`);
@@ -246,6 +227,7 @@ const renderRelatedMovies = async (RelatedMovies) => {
 		}
 	});
 };
+
 /**************** credits ************** */
 
 // Fetch credits
@@ -254,27 +236,28 @@ const fetchCredits = async (movie_id) => {
 	const res = await fetch(url);
 	return res.json();
 };
+
 // render credits
 const renderCredits = async (credits) => {
 	console.log(credits);
 	const actorsList = document.getElementById('actors');
-	credits.map((actor, index) => {
+	credits.map((actor) => {
 		const actorAtag = document.createElement('li');
 		actorAtag.innerHTML = `<p>${actor.name}</p>
       <img src="${BACKDROP_BASE_URL + actor.profile_path}" alt = "${
 			actor.name
 		}" width = "100px"/>`;
-		// generAtag.addEventListener('click', () => {
-		// 	fetchMovie(movie.id);
-		// });
+		actorAtag.addEventListener('click', () => {
+			renderActorDetails(actor.id);
+		});
 
 		actorsList.appendChild(actorAtag);
 	});
 };
 
 /**************** Movie LIst sorted by Genres ***************/
-// Movie Fetcher
 
+// Movie Fetcher
 const fetchMoviesByGenres = async (genreId) => {
 	const res = await fetch(
 		`https://api.themoviedb.org/3/discover/movie?api_key=542003918769df50083a13c415bbc602&with_genres=${genreId}`
@@ -316,8 +299,6 @@ const renderGeners = async () => {
 const fetchMovie = async (movieId) => {
 	const url = constructUrl(`movie/${movieId}`);
 	const res = await fetch(url);
-	console.log(res);
-
 	return res.json();
 };
 
