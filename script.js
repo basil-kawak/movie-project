@@ -192,11 +192,32 @@ searchBox.addEventListener('input', async () => {
 	});
 	renderMovies(moviesArray);
 	console.log(actorsArray);
-	actorsArray.map((element) => console.log(element.id));
+	// actorsArray.map((element) => console.log(element.id));
 
-	renderCredits(actorsArray);
+	renderActors(actorsArray);
 	//renderActorDetails(actorsArray[0].id); // renderActors function goes here
 });
+
+// render actors form search resulte
+const renderActors = async (actorsArray) => {
+	// CONTAINER.innerHTML = '';
+	console.log(actorsArray);
+	const actorsList = document.createElement('div');
+	actorsList.setAttribute('id', 'actors');
+	actorsArray.map((actore) => {
+		const actorAtag = document.createElement('div');
+		actorAtag.innerHTML = `<p>${actore.name}</p>
+      <img src="${BACKDROP_BASE_URL + actore.profile_path}" alt = "${
+			actore.name
+		}" width = "200px"/>`;
+		actorAtag.addEventListener('click', () => {
+			renderActorDetails(actore.id);
+		});
+
+		actorsList.appendChild(actorAtag);
+	});
+	CONTAINER.appendChild(actorsList);
+};
 
 /****************  related movies ************** */
 
