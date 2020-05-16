@@ -46,11 +46,3 @@ a {
 .col-md-4 img {
 	width: 90%;
 }
-/***************related-movies-div****************/
-#related-movies-div {
-	display: flex;
-}
-#related-movie-div {
-	width: 20%;
-	justify-content: space-evenly;
-}
