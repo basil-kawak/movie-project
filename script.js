@@ -11,10 +11,17 @@ const actorsListBtn = document.getElementById('actors-list');
 const actorsList = document.createElement('ul').setAttribute('id', 'actors');
 
 // Don't touch this function please
-const autorun = async () => {
-	const movies = await fetchMovies();
+
+const autorun = async (filterResults) => {
+	const movies = await fetchMovies(filterResults);
+	CONTAINER.innerHTML = '';
 	renderMovies(movies.results);
-};
+  };
+
+// const autorun = async () => {
+// 	const movies = await fetchMovies();
+// 	renderMovies(movies.results);
+// };
 // Don't touch this function please
 const constructUrl = (path) => {
 	// console.log(atob('NTQyMDAzOTE4NzY5ZGY1MDA4M2ExM2M0MTViYmM2MDI='))
@@ -48,11 +55,18 @@ const movieDetails = async (movie) => {
 };
 
 // This function is to fetch movies. You may need to add it or change some part in it in order to apply some of the features.
-const fetchMovies = async () => {
-	const url = constructUrl(`movie/now_playing`);
+
+const fetchMovies = async (filternavbar) => {
+	const url = constructUrl(`movie/${filternavbar}`);
 	const res = await fetch(url);
 	return res.json();
-};
+  };
+
+// const fetchMovies = async () => {
+// 	const url = constructUrl(`movie/now_playing`);
+// 	const res = await fetch(url);
+// 	return res.json();
+// };
 
 /**************** ACTOR LIST PAGE ************** */
 const fetchPopularActors = async () => {
@@ -403,6 +417,12 @@ const renderMovie = (
 };
 
 document.addEventListener('DOMContentLoaded', async function () {
-	autorun();
+	autorun('now_playing');
 	renderGeners();
 });
+
+
+// document.addEventListener('DOMContentLoaded', async function () {
+// 	autorun();
+// 	renderGeners();
+// });
