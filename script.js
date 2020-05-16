@@ -11,17 +11,11 @@ const actorsListBtn = document.getElementById('actors-list');
 const actorsList = document.createElement('ul').setAttribute('id', 'actors');
 
 // Don't touch this function please
-
 const autorun = async (filterResults) => {
 	const movies = await fetchMovies(filterResults);
 	CONTAINER.innerHTML = '';
 	renderMovies(movies.results);
-  };
-
-// const autorun = async () => {
-// 	const movies = await fetchMovies();
-// 	renderMovies(movies.results);
-// };
+};
 // Don't touch this function please
 const constructUrl = (path) => {
 	// console.log(atob('NTQyMDAzOTE4NzY5ZGY1MDA4M2ExM2M0MTViYmM2MDI='))
@@ -55,18 +49,11 @@ const movieDetails = async (movie) => {
 };
 
 // This function is to fetch movies. You may need to add it or change some part in it in order to apply some of the features.
-
 const fetchMovies = async (filternavbar) => {
 	const url = constructUrl(`movie/${filternavbar}`);
 	const res = await fetch(url);
 	return res.json();
-  };
-
-// const fetchMovies = async () => {
-// 	const url = constructUrl(`movie/now_playing`);
-// 	const res = await fetch(url);
-// 	return res.json();
-// };
+};
 
 /**************** ACTOR LIST PAGE ************** */
 const fetchPopularActors = async () => {
@@ -89,7 +76,7 @@ const renderPopularActors = async () => {
         <img src="${
 					actor.profile_path
 						? BACKDROP_BASE_URL + actor.profile_path
-						: './img/noImage.svg'
+						: './img/noActorImage.svg'
 				}" alt="${actor.name} poster" onclick =>
 		<h3>${actor.name}</h3>`; //"renderActorDetails(${actor.id})"
 		movieDiv.addEventListener('click', async () => {
@@ -124,7 +111,7 @@ const renderActorDetails = async (actorId) => {
 		Popularity: actorInfo.popularity,
 		Picture: actorInfo.profile_path
 			? BACKDROP_BASE_URL + actorInfo.profile_path
-			: './img/noImage.svg',
+			: './img/noActorImage.svg',
 		Biography: actorInfo.Biography || 'No Biography',
 		Movies: actorInfoArr.length > 0 ? actorInfoArr : 'No Available Movies',
 		Gender: actorInfo.gender === 2 ? 'Male' : 'Female',
@@ -135,7 +122,7 @@ const renderActorDetails = async (actorId) => {
              <img id="actor-img" src=${
 								actorsInfosObj.Picture
 									? actorsInfosObj.Picture
-									: './img/noImage.svg'
+									: './img/noActorImage.svg'
 							}>
         </div>
 		<div class="col-md-8">
@@ -170,7 +157,7 @@ const renderActorDetails = async (actorId) => {
 				<img id="movie-img" src='${
 					movie.poster_path
 						? BACKDROP_BASE_URL + movie.poster_path
-						: './img/noImage.svg'
+						: './img/noActorImage.svg'
 				}' alt = '${movie.title}' width = '100'>`;
 				movieLi.addEventListener('click', () => {
 					movieDetails(movie);
@@ -225,7 +212,7 @@ const renderActors = async (actorsArray) => {
       <img src="${
 				actore.profile_path
 					? BACKDROP_BASE_URL + actore.profile_path
-					: './img/noImage.svg'
+					: './img/noActorImage.svg'
 			}" alt = "${actore.name}" width = "200px"/>`;
 		actorAtag.addEventListener('click', () => {
 			renderActorDetails(actore.id);
@@ -301,14 +288,20 @@ const renderMovies = (movies) => {
 	CONTAINER.appendChild(homepageDiv);
 	movies.map((movie) => {
 		const movieDiv = document.createElement('div');
-		movieDiv.setAttribute('class', 'col-md-4');
+		movieDiv.setAttribute('class', 'Dcontainer col-md-4');
 		movieDiv.innerHTML = `
         <img src="${
 					movie.backdrop_path
 						? BACKDROP_BASE_URL + movie.backdrop_path
-						: './img/noImage.svg'
+						: './img/noMovieImage.svg'
 				}" alt="${movie.title} poster">
-        <h6>${movie.title}</h6>`;
+		<h6>${movie.title}</h6>
+		<div class="overlay">
+        <div class="text">${movie.overview}</div>
+        </div>
+        <h4> <span class="fa fa-star checked"> </span> ${
+					movie.vote_average
+				} </h4>`;
 		movieDiv.addEventListener('click', () => {
 			movieDetails(movie);
 		});
@@ -328,14 +321,14 @@ const renderMovie = (
 	let director = credits.crew.find((directorName) => {
 		return directorName.job === 'Director';
 	});
-
+	console.log(movie);
 	CONTAINER.innerHTML = `
     <div class="row">	
         <div class="col-md-4">
              <img id="movie-backdrop" src=${
 								movie.backdrop_path
-									? BACKDROP_BASE_URL + movie.backdrop_path
-									: './img/noImage.svg'
+									? BACKDROP_BASE_URL + movie.poster_path
+									: './img/noActorImage.svg'
 							}>
         </div>
         <div class="col-md-8">
@@ -360,6 +353,8 @@ const renderMovie = (
 			<p id="movie-director "><b>Movie Director:</b> ${director.name}</p>
 			<p id="movie-vote-average "><b>vote average:</b> ${movie.vote_average}</p>
 			<p id="movie-vote-count "><b>vote count:</b> ${movie.vote_count}</p>
+			</br>
+			</br>
 			</div>
 			<div class='row'>
 			<h3>Overview:</h3>
@@ -385,7 +380,7 @@ const renderMovie = (
       <img src="${
 				actor.profile_path
 					? BACKDROP_BASE_URL + actor.profile_path
-					: './img/noImage.svg'
+					: './img/noActorImage.svg'
 			}" alt = "${actor.name}" width = "150px"/>`;
 		actorAtag.addEventListener('click', () => {
 			renderActorDetails(actor.id);
@@ -405,7 +400,7 @@ const renderMovie = (
 			<img border="0" alt="${movie.title}" src="${
 				movie.poster_path
 					? BACKDROP_BASE_URL + movie.poster_path
-					: './img/noImage.svg'
+					: './img/noActorImage.svg'
 			}" width="100"/>
 			`;
 			relatedMoviesDivtag.addEventListener('click', () => {
@@ -420,9 +415,3 @@ document.addEventListener('DOMContentLoaded', async function () {
 	autorun('now_playing');
 	renderGeners();
 });
-
-
-// document.addEventListener('DOMContentLoaded', async function () {
-// 	autorun();
-// 	renderGeners();
-// });

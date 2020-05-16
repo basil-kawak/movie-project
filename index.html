@@ -23,8 +23,10 @@
 	</head>
 
 	<body>
-		<nav class="navbar navbar-expand-lg navbar-light bg-light">
-			<a class="navbar-brand" href="#">Navbar</a>
+		<nav id="navbar" class="navbar navbar-expand-lg navbar-light">
+			<a class="navbar-brand" href="#" onclick="autorun('now_playing')"
+				>Movie Hub</a
+			>
 			<button
 				class="navbar-toggler"
 				type="button"
@@ -40,7 +42,7 @@
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item active">
-						<a class="nav-link" id="homeBtn" onclick="autorun()"
+						<a class="nav-link" id="homeBtn" onclick="autorun('now_playing')"
 							>Home <span class="sr-only">(current)</span></a
 						>
 					</li>
@@ -65,39 +67,47 @@
 							<div class="dropdown-divider"></div>
 						</div>
 					</li>
-
-					<!-- filterDropdown /////////////////////////////-->
-					<li class="nav-item dropdown">
-						<a
-						  class="nav-link dropdown-toggle"
-						  href="#"
-						  id="navbarDropdown"
-						  role="button"
-						  data-toggle="dropdown"
-						  aria-haspopup="true"
-						  aria-expanded="false"
-						>
-						  FILTER
-						</a>
-						<div class="dropdown-menu" aria-labelledby="navbarDropdown" id="filterDropdown">
-						  <a onclick="autorun('popular')" class="dropdown-item" href="#">Popular Movies</a>
-						  <a onclick="autorun('top_rated')" class="dropdown-item" href="#">Top rated</a>
-						  <a onclick="autorun('latest')" class="dropdown-item" href="#">Latest</a>
-						  <a onclick="autorun('now_playing')" class="dropdown-item" href="#">now Playing</a>
-						  <a onclick="autorun('upcoming')"class="dropdown-item" href="#">Upcoming</a>
-						</div>
-					  </li>
-					  <!-- filterDropdownEnd //////////////////////-->
-
 					<li class="nav-item">
-						<a
-							class="nav-link disabled"
-							href="#"
-							tabindex="-1"
-							aria-disabled="true"
-							>Disabled</a
+						<a class="nav-link" href="#" tabindex="-1" aria-disabled="true"
+							>About</a
 						>
 					</li>
+					<!-- filter code ///////////////////////////////////////////////-->
+					<li class="nav-item dropdown">
+						<a
+							class="nav-link dropdown-toggle"
+							href="#"
+							id="navbarDropdown"
+							role="button"
+							data-toggle="dropdown"
+							aria-haspopup="true"
+							aria-expanded="false"
+						>
+							FILTER
+						</a>
+						<div
+							class="dropdown-menu"
+							aria-labelledby="navbarDropdown"
+							id="filterDropdown"
+						>
+							<a onclick="autorun('popular')" class="dropdown-item" href="#"
+								>Popular Movies</a
+							>
+							<a onclick="autorun('top_rated')" class="dropdown-item" href="#"
+								>Top rated</a
+							>
+							<!-- <a onclick="autorun('latest')" class="dropdown-item" href="#"
+								>Latest</a
+							> -->
+							<a onclick="autorun('now_playing')" class="dropdown-item" href="#"
+								>now Playing</a
+							>
+							<a onclick="autorun('upcoming')" class="dropdown-item" href="#"
+								>Upcoming</a
+							>
+						</div>
+					</li>
+					<!-- filter code /////////////////////////////////////////////////-->
 				</ul>
 				<form class="form-inline my-2 my-lg-0">
 					<input
@@ -107,29 +117,35 @@
 						placeholder="Search"
 						aria-label="Search"
 					/>
-					<button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+					<!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
 						Search
-					</button>
+					</button> -->
 				</form>
 			</div>
 		</nav>
 		<div class="container"></div>
 		<footer>
-			<p>Made with &#10084; By Majd & Basil ©. All rights reserved.</p>
-			<ul class="social-networks bounce">
-				<li>
-					<a href="https://github.com" class="icon-github"
-						>GitHub <i class="fab fa-github"></i
-					></a>
-				</li>
-
-				<li>
-					<a href="https://instagram.com" class="icon-instagram"
-						>Instagram <i class="fab fa-instagram"></i
-					></a>
-				</li>
-			</ul>
+			<div class="footer-main-div">
+				<p class="copy-right justify-content-center row">
+					Made with &#10084; By Majd & Basil ©. All rights reserved.
+				</p>
+				<ul class="social-networks bounce d-flex justify-content-center row">
+					<li>
+						<a href="https://github.com/Majd-07" class="fa fa-github"></a>
+					</li>
+					<li><p class="footerand">&</p></li>
+					<li>
+						<a
+							href="https://github.com/basil-kawak
+						"
+							class="fa fa-github"
+						></a>
+					</li>
+					<br />
+				</ul>
+			</div>
 		</footer>
+
 		<script type="text/javascript" src="script.js"></script>
 		<script
 			src="https://code.jquery.com/jquery-3.4.1.slim.min.js"

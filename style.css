@@ -1,19 +1,42 @@
 #movie-backdrop {
 	width: 100%;
 }
+nav {
+	background-color: #ffc105;
+}
 
+element.style {
+	background-color: #ffc105;
+}
+#search-box {
+	background-color: #c5c2c2;
+}
+placeholder {
+	color: #e0dddd;
+}
 .container {
 	padding-top: 32px;
 }
-
+.container img {
+	border-radius: 25px;
+}
+.container img:hover {
+	box-shadow: 10px 10px 20px rgba(0, 0, 0, 25%);
+}
 #actors {
 	margin: 24px 16px 0 0;
 }
 /********** footer ************/
 footer {
 	padding: 10px 20px;
-	background: #e0dddd;
+	background: #ccc089;
 	color: #666;
+}
+footer li {
+	list-style: none;
+}
+.footerand {
+	padding: 10px;
 }
 
 /********** social media icons ************/
@@ -30,6 +53,7 @@ h1 {
 	margin-bottom: 0px;
 	font-size: 55px;
 	line-height: 1;
+	color: #71748f;
 }
 
 h2 {
@@ -45,4 +69,115 @@ a {
 }
 .col-md-4 img {
 	width: 90%;
+}
+.checked {
+	color: rgb(255, 230, 0);
+}
+/*hmoe page overlay effect*/
+/* .Dcontainer {
+	position: relative;
+	width: 50%;
+}
+
+.image {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+.overlay {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: #008cba;
+	overflow: hidden;
+	width: 100%;
+	height: 0;
+	transition: 0.5s ease;
+}
+
+.Dcontainer:hover .overlay {
+	height: 100%;
+}
+
+.text {
+	color: white;
+	font-size: 20px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	text-align: center;
+} */
+.overlay {
+	position: absolute;
+	overflow: auto;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 100%;
+	width: 100%;
+	opacity: 0;
+	transition: 0.8s ease;
+	/* background-color: rgba(0, 0, 0, 0.102); */
+	background: #262730
+		url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/93/noise-bg.png) repeat 0 0;
+}
+
+.overlay:hover {
+	opacity: 1;
+}
+
+.text {
+	color: rgb(247, 247, 247);
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	text-align: center;
+	font-size: 13px;
+}
+
+.w-100 img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+.fa {
+	font-size: 25px;
+	width: 25px;
+	text-align: center;
+	text-decoration: none;
+	border-radius: 70%;
+	padding-top: 12px;
+	justify-content: space-around;
+}
+
+.fa:hover {
+	opacity: 0.9;
+	color: #ffc105;
+	transform: scale(1.2);
+	cursor: pointer;
+}
+::-webkit-scrollbar {
+	width: 15px;
+	height: 18px;
+}
+::-webkit-scrollbar-track {
+	box-shadow: inset 0 0 5px grey;
+	border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+	background: #ffc105;
+	border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+	background: #ffc105;
 }
