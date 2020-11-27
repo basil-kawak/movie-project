@@ -18,7 +18,6 @@ const autorun = async (filterResults) => {
 };
 // Don't touch this function please
 const constructUrl = (path) => {
-	// console.log(atob('NTQyMDAzOTE4NzY5ZGY1MDA4M2ExM2M0MTViYmM2MDI='))
 	return `${TMDB_BASE_URL}/${path}?api_key=${atob(
 		'NTQyMDAzOTE4NzY5ZGY1MDA4M2ExM2M0MTViYmM2MDI='
 	)}`;
